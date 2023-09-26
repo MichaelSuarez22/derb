@@ -37,7 +37,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'djgentelella',
+    'rest_framework',
+    'markitup',
+    'derbtable',
 ]
+
+MARKITUP_FILTER = ('markdown.markdown', {'safe_mode': True})
+MARKITUP_SET = 'markitup/sets/markdown/'
+JQUERY_URL = None
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -49,12 +57,13 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+
 ROOT_URLCONF = 'derbAPI.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['./dertable/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
