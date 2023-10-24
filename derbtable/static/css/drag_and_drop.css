@@ -1,0 +1,50 @@
+/* Contenido copiado desde el estilo en el HTML */
+.column-left, .column-right {
+    background-color: #f0f0f0;
+    padding: 10px;
+    width: 15%;
+}
+
+.column-center {
+    background-color: #ffffff;
+    border: 2px solid #333;
+    padding: 20px;
+    min-height: 300px; /* Aumenta la altura según tu preferencia */
+    width: 65%;
+}
+
+/* Estilo personalizado para el icono de ayuda */
+.help-icon {
+    font-size: 20px;
+    color: #007bff; /* Color azul para resaltar el ícono */
+}
+
+/* Estilos de .drag-container, .draggable-item y .drop-container */
+.drag-container {
+    border: 2px dashed #ccc;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.draggable-item {
+    background-color: #f0f0f0;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.drop-container {
+    border: 2px solid #333;
+    padding: 20px;
+    min-height: 100px;
+}
+
+/* Estilos para hacer que el formulario sea responsive */
+#formulario-container {
+    width: 100%; /* Asegura que el formulario ocupe todo el ancho del contenedor */
+    height: 100%; /* Asegura que el formulario ocupe todo el alto del contenedor */
+}
+
+form {
+    width: 100%; /* Asegura que el formulario ocupe todo el ancho del contenedor */
+    height: 100%; /* Asegura que el formulario ocupe todo el alto del contenedor */
+}

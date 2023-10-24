@@ -1,0 +1,21 @@
+{% extends 'gentelella/base.html' %}
+{% load static %}
+
+{% block content %}
+<div id="formcontent" class="jumbotron">
+<div class="children"></div>
+</div>
+
+{% endblock %}
+
+{% block js %}
+<script>
+
+  document.derb_urls={};
+
+
+</script>
+
+<script src="{% static 'derb_widgets.js' %}"></script>
+<script src="{% static 'derb.js' %}"></script>
+{% endblock %}

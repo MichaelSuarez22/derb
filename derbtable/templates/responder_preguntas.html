@@ -1,0 +1,168 @@
+{% extends 'gentelella/base.html' %}
+{% load static %}
+{% block stylesheets %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+<link href="{% static 'vendors/bootstrap/bootstrap.min.css' %}" rel="stylesheet">
+<link href="{% static 'css/style.css' %}" rel="stylesheet">
+<style>
+    /* Estilo para ocultar la tabla inicialmente */
+    #tabla-preguntas-respuestas {
+        display: none;
+    }
+
+    /* Estilo para el icono de apertura */
+    #icono-apertura {
+        cursor: pointer;
+        color: #007bff;
+    }
+</style>
+{% endblock stylesheets %}
+{% block content %}
+<h1>Formulario de preguntas</h1>
+<div id="formulario-container">
+    <form id="miFormulario" method="post">
+        {% csrf_token %}
+        {% for form, pregunta_text in formset_with_questions %}
+            <div class="form-group">
+                <label for="{{ form.text_response.id_for_label }}">Pregunta #{{ forloop.counter }}: "{{ pregunta_text }}"</label>
+                {% if pregunta_text == "Seleccione las características del proyecto" %}
+                    <!-- Mostrar checkboxes para opciones de respuesta -->
+                    {% for option in form.text_response.queryset %}
+                        <label>
+                            <input type="checkbox" name="{{ form.text_response.name }}" value="{{ option.id }}">
+                            {{ option.text }}
+                        </label>
+                    {% endfor %}
+                {% else %}
+                    {{ form.text_response }}
+                {% endif %}
+            </div>
+        {% endfor %}
+        <input type="submit" value="Guardar">
+        <button type="button" id="agregarFila">Agregar</button>  <!-- Botón para agregar fila -->
+    </form>
+</div>
+<!-- Icono para abrir la tabla de respuestas -->
+<i id="icono-apertura" class="fas fa-chevron-down"></i>
+<div id="tabla-preguntas-respuestas">
+    <h1>Tabla de respuestas</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Eliminar</th>
+                {% for pregunta in preguntas %}
+                    <th>{{ pregunta.text }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for respuesta in respuestas %}
+                <tr data-response-id="{{ respuesta.id }}">
+                    <td>
+                        <button class="btn btn-danger delete-response">Eliminar</button>
+                    </td>
+                    {% for pregunta in preguntas %}
+                        <td>
+                            {% if pregunta.id == respuesta.question.id %}
+                                {{ respuesta.text_response }}
+                            {% endif %}
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <button id="eliminarTodo" class="btn btn-danger">Eliminar todo</button>
+    <a href="{% url 'responder_preguntas' %}" class="btn btn-primary">Ir al formulario</a>
+</div>
+{% endblock %}
+{% block js %}
+<script>
+const iconoApertura = document.getElementById('icono-apertura');
+const tablaPreguntasRespuestas = document.getElementById('tabla-preguntas-respuestas');
+const miFormulario = document.getElementById('miFormulario');
+const tablaRespuestas = document.querySelector('.table tbody');
+const eliminarTodoButton = document.getElementById('eliminarTodo');
+
+// Alternar la tabla de respuestas al hacer clic en el icono
+iconoApertura.addEventListener('click', function() {
+    if (tablaPreguntasRespuestas.style.display === 'none') {
+        tablaPreguntasRespuestas.style.display = 'block';
+        iconoApertura.className = 'fas fa-chevron-up'; // Cambiar el ícono a "arriba"
+    } else {
+        tablaPreguntasRespuestas.style.display = 'none';
+        iconoApertura.className = 'fas fa-chevron-down'; // Cambiar el ícono a "abajo"
+    }
+});
+
+// Obtener el token CSRF de la cookie
+const csrftoken = document.cookie.match(/csrftoken=([a-zA-Z0-9]+)(?:;|$)/)[1];
+
+// Función para eliminar una fila de la tabla
+function deleteTableRow(responseId) {
+    const row = document.querySelector(`tr[data-response-id="${responseId}"]`);
+    if (row) {
+        fetch(`/eliminar_respuesta/${responseId}/`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRFToken': csrftoken
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                row.remove();
+            } else {
+                // Manejar errores de eliminación en el backend
+                console.error('No se pudo eliminar la respuesta.');
+            }
+        })
+        .catch(error => {
+            console.error('Error en la solicitud AJAX: ', error);
+        });
+    }
+}
+
+// Agregar evento al botón "Agregar"
+const agregarFilaButton = document.getElementById('agregarFila');
+agregarFilaButton.addEventListener('click', function() {
+    // Obtener los valores del formulario y agregarlos a la tabla
+    const respuestaData = new FormData(miFormulario);
+    const newRow = document.createElement('tr');
+
+    // Agregar el botón de eliminación
+    const deleteButton = document.createElement('button');
+    deleteButton.className = 'btn btn-danger delete-response';
+    deleteButton.textContent = 'Eliminar';
+    newRow.insertCell(0).appendChild(deleteButton);
+
+    // Agregar las respuestas a la tabla
+    respuestaData.forEach((value, key) => {
+        if (key !== 'csrfmiddlewaretoken') {
+            newRow.insertCell().textContent = value;
+        }
+    });
+
+    tablaRespuestas.appendChild(newRow);
+
+    // Agregar evento al botón de eliminación de la fila recién agregada
+    deleteButton.addEventListener('click', function() {
+        deleteTableRow(responseId);
+    });
+});
+
+// Agregar evento al botón "Eliminar todo"
+eliminarTodoButton.addEventListener('click', function() {
+    // Obtener todas las filas de respuestas
+    const filasRespuestas = document.querySelectorAll('.table tbody tr');
+
+    // Recorrer todas las filas y eliminarlas
+    filasRespuestas.forEach(row => {
+        const responseId = row.getAttribute('data-response-id');
+        deleteTableRow(responseId);
+    });
+});
+</script>
+{% endblock %}
+
+
+

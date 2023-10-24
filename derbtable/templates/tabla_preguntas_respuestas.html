@@ -1,0 +1,80 @@
+{% extends 'gentelella/base.html' %}
+{% load static %}
+{% block stylesheets %}
+<link href="{% static 'vendors/bootstrap/bootstrap.min.css' %}" rel="stylesheet">
+<link href="{% static 'css/style.css' %}" rel="stylesheet">
+{% endblock stylesheets %}
+{% block content %}
+<h1>Tabla de respuestas</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Eliminar</th>
+            {% for pregunta in preguntas %}
+                <th>{{ pregunta.text }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for respuesta in respuestas %}
+            <tr data-response-id="{{ respuesta.id }}">
+                <td>
+                    <button class="btn btn-danger delete-response">Eliminar</button>
+                </td>
+                {% for pregunta in preguntas %}
+                    <td>
+                        {% if pregunta.id == respuesta.question.id %}
+                            {{ respuesta.text_response }}
+                        {% endif %}
+                    </td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<a href="{% url 'responder_preguntas' %}" class="btn btn-primary">Ir al formulario</a>
+</div>
+
+<script>
+// Obtener el token CSRF de la cookie
+const csrftoken = document.cookie.match(/csrftoken=([a-zA-Z0-9]+)(?:;|$)/)[1];
+
+// Función para eliminar una fila de la tabla
+function deleteTableRow(responseId) {
+    const row = document.querySelector(`tr[data-response-id="${responseId}"]`);
+    if (row) {
+
+        fetch(`/eliminar_respuesta/${responseId}/`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRFToken': csrftoken
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+
+                row.remove();
+            } else {
+                // Manejar errores de eliminación en el backend
+                console.error('No se pudo eliminar la respuesta.');
+            }
+        })
+        .catch(error => {
+            console.error('Error en la solicitud AJAX: ', error);
+        });
+    }
+}
+
+
+const deleteButtons = document.querySelectorAll('.delete-response');
+deleteButtons.forEach(button => {
+    button.addEventListener('click', function() {
+        const responseId = button.closest('tr').getAttribute('data-response-id');
+        deleteTableRow(responseId);
+    });
+});
+</script>
+{% endblock %}
+
+
+

@@ -1,1 +1,44 @@
 {% extends 'gentelella/base.html' %}
+{% load static %}
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-3 column-left">
+            <!-- Column for the draggable component -->
+            <div class="drag-container">
+                <div id="draggable-component" class="draggable-item" draggable="true">
+                    Formulario de preguntas
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 column-center">
+            <!-- Column for the drop area (larger) -->
+            <div class="drop-container bg-light border p-3" id="drop-container">
+                Espacio
+            </div>
+        </div>
+        <div class="col-md-3 column-right">
+            <!-- Column for information and help -->
+            <div class="info-container">
+                <h3>Help</h3>
+                <button class="btn btn-link help-icon" data-toggle="collapse" data-target="#help-content">
+                    <i class="fa fa-question-circle"></i> <!-- Icono de ayuda -->
+                </button>
+                <div id="help-content" class="collapse">
+                    <!-- Agrega el texto de ayuda aquí -->
+                    <p>Toma el componente del formulario y arrástralo al espacio indicado</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{% static 'js/drag_and_drop.js' %}"></script>
+<link rel="stylesheet" type="text/css" href="{% static 'css/drag_and_drop.css' %}">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> <!-- Asegúrate de incluir Bootstrap y Font Awesome si aún no los tienes -->
+
+{% endblock %}
+
+
+
+
+
