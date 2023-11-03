@@ -2,6 +2,7 @@ from rest_framework import serializers
 from derbtable.models import Question, Response, Formulario
 
 
+
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question

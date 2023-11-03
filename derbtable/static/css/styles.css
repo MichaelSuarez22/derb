@@ -38,4 +38,13 @@ input[type="submit"]:hover {
     background-color: #0056b3;
 }
 
+/* Estilo para ocultar la tabla inicialmente */
+#tabla-preguntas-respuestas {
+    display: none;
+}
 
+/* Estilo para el icono de apertura */
+#icono-apertura {
+    cursor: pointer;
+    color: #007bff;
+}
