@@ -6,7 +6,7 @@
     <div class="clearfix"></div>
 <link rel="stylesheet" type="text/css" href="{% static 'css/Component_questions.css' %}">
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-10">
             <div class="x_panel">
                 <div class="x_title">
                     <h3>Crear Nueva Pregunta</h3>
@@ -14,9 +14,9 @@
                 </div>
                 <div class="x_content">
                     <div id="formulario-container">
-                    <form method="post" action="{% url 'question-list' %}">
+                    <form method="post" action="{% url 'question-list' %}" >
                         {% csrf_token %}
-                        <div class="seccion-pregunta">
+                        <div class="seccion-pregunta" id="seccion-pregunta-1">
                         <div class="form-group">
                             <label for="pregunta">Pregunta:</label>
                             <input type="text" id="pregunta" name="text" class="form-control">

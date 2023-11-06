@@ -20,11 +20,12 @@ class QuestionViewSet(viewsets.ModelViewSet):
     serializer_class = QuestionSerializer
 
     def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
+        serializer = self.get_serializer(data=request.data, many=True)
         if serializer.is_valid():
             serializer.save()
-            return redirect('/')  # Redirige a la vista 'ver_preguntas'
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+            return JsonResponse(serializer.data, status=201, safe=False)  # 201 Created
+        return JsonResponse(serializer.errors, status=400, safe=False)
 
 
 class ResponseViewSet(viewsets.ModelViewSet):
