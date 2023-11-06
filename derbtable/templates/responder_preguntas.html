@@ -4,8 +4,8 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
 <link href="{% static 'vendors/bootstrap/bootstrap.min.css' %}" rel="stylesheet">
 <link href="{% static 'css/style.css' %}" rel="stylesheet">
-
 {% endblock stylesheets %}
+
 {% block content %}
 <h1>Formulario de preguntas</h1>
 <div id="formulario-container">
@@ -14,16 +14,10 @@
         {% for form, pregunta_text in formset_with_questions %}
             <div class="form-group">
                 <label for="{{ form.text_response.id_for_label }}">Pregunta #{{ forloop.counter }}: "{{ pregunta_text }}"</label>
-                {% if pregunta_text == "Seleccione las características del proyecto" %}
-                    <!-- Para mostrar checkboxes -->
-                    {% for option in form.text_response.queryset %}
-                        <label>
-                            <input type="checkbox" name="{{ form.text_response.name }}" value="{{ option.id }}">
-                            {{ option.text }}
-                        </label>
-                    {% endfor %}
-                {% else %}
+                {% if form.text_response.name == "text_response" %}
                     {{ form.text_response }}
+                {% elif form.text_response.name == "number_response" %}
+                    <input type="number" name="{{ form.text_response.name }}">
                 {% endif %}
             </div>
         {% endfor %}
@@ -54,7 +48,3 @@
 {% block js %}
 <script src="{% static 'js/Formulario.js' %}"></script>
 {% endblock %}
-
-
-
-

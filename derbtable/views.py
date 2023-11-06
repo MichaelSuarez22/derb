@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from django.shortcuts import redirect
 
 
-from .forms import ResponseForm
+from .forms import  ResponseNumberForm, ResponseTextForm
 from .models import Question, Response, Formulario, Respuesta
 from derbtable.Serializers import QuestionSerializer, ResponseSerializer, FormularioSerializer
 
@@ -47,8 +47,16 @@ def responder_preguntas(request):
             return redirect('responder_preguntas')
 
     preguntas = Question.objects.all()
-    formset = [ResponseForm(initial={'question': pregunta}, pregunta=pregunta) for pregunta in preguntas]
+    formset = []
     respuestas = Response.objects.all()
+
+    for pregunta in preguntas:
+        # Filtra las preguntas por question_type
+        if pregunta.question_type == "number":
+            form = ResponseNumberForm(initial={'question': pregunta})
+        else:
+            form = ResponseTextForm(initial={'question': pregunta})
+        formset.append(form)
 
     context = {
         'formset_with_questions': zip(formset, preguntas),
