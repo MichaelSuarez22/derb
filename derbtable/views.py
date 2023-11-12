@@ -33,14 +33,14 @@ class Question2ViewSet(viewsets.ModelViewSet):
     serializer_class = Question2Serializer
 
     def create(self, request, *args, **kwargs):
-        data = request.data
-        serializer = self.get_serializer(data=data)
-
+        serializer = self.get_serializer(data=request.data, many=True)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return (redirect("/"))
+            return JsonResponse(serializer.data, status=201, safe=False)  # 201 Created
+        return JsonResponse(serializer.errors, status=400, safe=False)
 
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class ResponseViewSet(viewsets.ModelViewSet):
     queryset = Response.objects.all()

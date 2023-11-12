@@ -46,10 +46,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
                         var guardarButton = formContainer.querySelector('#guardar');
                         guardarButton.addEventListener('click', function () {
-                            guardarPreguntas();
+                            var apiUrl;
+
+                            if (dropContainer.id === 'drop-container-1') {
+                                apiUrl = '/api/questions/';
+                            } else if (dropContainer.id === 'drop-container-2') {
+                                apiUrl = '/api/questions2/';
+                            } else {
+                                // Agrega lógica para otro contenedor si es necesario
+                            }
+
+                            guardarPreguntas(apiUrl);
                         });
 
-                        function guardarPreguntas() {
+                        function guardarPreguntas(apiUrl) {
                             preguntas = [];
 
                             for (var i = 1; i <= preguntaCounter; i++) {
@@ -64,7 +74,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             }
 
                             $.ajax({
-                                url: "/api/questions/",
+                                url: apiUrl,
                                 type: 'POST',
                                 data: JSON.stringify(preguntas),
                                 contentType: 'application/json',
