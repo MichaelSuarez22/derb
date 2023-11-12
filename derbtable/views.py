@@ -7,9 +7,9 @@ from rest_framework.response import Response
 from django.shortcuts import redirect
 
 
-from .forms import  ResponseNumberForm, ResponseTextForm
-from .models import Question, Response, Formulario, Respuesta
-from derbtable.Serializers import QuestionSerializer, ResponseSerializer, FormularioSerializer
+from derbtable.forms import  ResponseNumberForm, ResponseTextForm
+from .models import Question, Response, Formulario, Respuesta, Question2
+from derbtable.Serializers import QuestionSerializer, ResponseSerializer, FormularioSerializer, Question2Serializer
 
 
 def prueba(request):
@@ -23,10 +23,24 @@ class QuestionViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(data=request.data, many=True)
         if serializer.is_valid():
             serializer.save()
-
+            return(redirect("/"))
             return JsonResponse(serializer.data, status=201, safe=False)  # 201 Created
         return JsonResponse(serializer.errors, status=400, safe=False)
 
+
+class Question2ViewSet(viewsets.ModelViewSet):
+    queryset = Question2.objects.all()
+    serializer_class = Question2Serializer
+
+    def create(self, request, *args, **kwargs):
+        data = request.data
+        serializer = self.get_serializer(data=data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class ResponseViewSet(viewsets.ModelViewSet):
     queryset = Response.objects.all()
@@ -96,3 +110,32 @@ def guardar_respuesta(request):
 
 def ver_preguntas(request):
     return render(request, 'Component_questions.html')
+
+
+
+def responder_preguntas2(request):
+    if request.method == 'POST':
+        formset = ResponseForm(request.POST)
+        if formset.is_valid():
+            for form in formset:
+                if form.cleaned_data.get('text_response'):
+                    response = form.save()
+            return redirect('responder_preguntas2')
+
+    preguntas = Question2.objects.all()
+    formset = []
+
+    for pregunta in preguntas:
+        # Filtra las preguntas por question_type
+        if pregunta.question_type == "number":
+            form = ResponseNumberForm(initial={'question': pregunta})
+        else:
+            form = ResponseTextForm(initial={'question': pregunta})
+        formset.append(form)
+
+    context = {
+        'pregunta_formset': zip(formset, preguntas),  # Actualizado a 'pregunta_formset'
+        'preguntas': preguntas,
+    }
+
+    return render(request, 'responder_preguntas2.html', context)

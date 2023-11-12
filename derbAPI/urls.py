@@ -9,6 +9,7 @@ router = DefaultRouter()
 router.register(r'questions', views.QuestionViewSet)
 router.register(r'responses', views.ResponseViewSet)
 router.register(r'formularios', views.FormularioViewSet)
+router.register(r'questions2', views.Question2ViewSet)
 urlpatterns = [
     path('admin/', admin.site.urls),
 path('',include('derbtable.urls')),
@@ -17,5 +18,5 @@ path('responder_preguntas/', views.responder_preguntas, name='responder_pregunta
 path('derb/', views.derb_view, name='derb_view'),
 path('eliminar_respuesta/<int:respuesta_id>/', views.eliminar_respuesta, name='eliminar_respuesta'),
 path('ver_preguntas/', views.ver_preguntas, name='ver_preguntas'),
-
+path('responder_preguntas2/', views.responder_preguntas2, name='responder_preguntas2'),
 ]

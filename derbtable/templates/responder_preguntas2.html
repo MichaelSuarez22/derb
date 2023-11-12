@@ -1,0 +1,62 @@
+{% extends 'gentelella/base.html' %}
+{% load static %}
+{% block stylesheets %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+<link href="{% static 'vendors/bootstrap/bootstrap.min.css' %}" rel="stylesheet">
+<link href="{% static 'css/style.css' %}" rel="stylesheet">
+{% endblock stylesheets %}
+
+{% block content %}
+  <h1>Formulario de preguntas</h1>
+  <div id="formulario-container">
+    <form id="miFormulario" method="post" action="">
+      {% csrf_token %}
+      {{ pregunta_formset.management_form }}
+      {% for form, pregunta_text in pregunta_formset %}
+        <div class="form-group">
+          <label for="{{ form.text_response.id_for_label }}">Pregunta #{{ forloop.counter }}: "{{ pregunta_text }}"</label>
+          {% if form.text_response.name == "text_response" %}
+            {{ form.text_response }}
+          {% elif form.text_response.name == "number_response" %}
+            <input type="number" name="{{ form.text_response.name }}">
+          {% endif %}
+        </div>
+      {% endfor %}
+      <button type="button" id="agregarFila">Agregar</button>
+    </form>
+  </div>
+
+  <!-- Icono para abrir la tabla de respuestas -->
+  <i id="icono-apertura" class="fas fa-chevron-down"></i>
+  <div id="tabla-preguntas-respuestas2">
+    <h1>Tabla de respuestas</h1>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Eliminar</th>
+          {% for pregunta in preguntas %}
+            <th>{{ pregunta.text }}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody id="respuesta-body">
+
+      </tbody>
+    </table>
+    <button id="eliminarTodo" class="btn btn-danger">Eliminar todo</button>
+    <a href="{% url 'responder_preguntas2' %}" class="btn btn-primary">Ir al formulario</a>
+  </div>
+
+
+  <form method="post" action="{% url 'responder_preguntas2' %}">
+    {% csrf_token %}
+    {{ number_response_form.as_p }}
+    {{ text_response_form.as_p }}
+
+  </form>
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'js/Formulario2.js' %}"></script>
+
+{% endblock %}

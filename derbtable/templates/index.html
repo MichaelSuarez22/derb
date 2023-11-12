@@ -12,9 +12,17 @@
             </div>
         </div>
         <div class="col-md-6 column-center">
-            <!-- Column for the drop area (larger) -->
-            <div class="drop-container bg-light border p-3" id="drop-container">
-                Espacio
+            <!-- Column for the first drop area -->
+            <div class="drop-container bg-light border p-3" id="drop-container-1" ondrop="drop(event, 1)" ondragover="allowDrop(event)">
+                Arrastre aquí el formulario
+            </div>
+            <!-- Column for the second drop area -->
+            <div class="drop-container bg-light border p-3" id="drop-container-2" ondrop="drop(event, 2)" ondragover="allowDrop(event)">
+                Arrastre aquí el formulario
+            </div>
+            <!-- Column for the third drop area -->
+            <div class="drop-container bg-light border p-3" id="drop-container-3" ondrop="drop(event, 3)" ondragover="allowDrop(event)">
+                Arrastre aquí el formulario
             </div>
         </div>
         <div class="col-md-3 column-right">
@@ -25,7 +33,6 @@
                     <i class="fa fa-question-circle"></i> <!-- Icono de ayuda -->
                 </button>
                 <div id="help-content" class="collapse">
-
                     <p>Toma el componente del formulario y arrástralo al espacio indicado</p>
                 </div>
             </div>
@@ -35,10 +42,4 @@
 <script src="{% static 'js/drag_and_drop.js' %}"></script>
 <link rel="stylesheet" type="text/css" href="{% static 'css/drag_and_drop.css' %}">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> <!-- Asegúrate de incluir Bootstrap y Font Awesome si aún no los tienes -->
-
 {% endblock %}
-
-
-
-
-

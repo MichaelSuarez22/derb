@@ -170,7 +170,6 @@ agregarFilaButton.addEventListener('click', function() {
     const respuestaBody = document.getElementById('respuesta-body');
     respuestaBody.appendChild(newRow);
 
-
     deleteButton.addEventListener('click', function() {
         const responseId = newRow.dataset.responseId;
         deleteTableRow(responseId);
@@ -184,7 +183,6 @@ window.addEventListener('load', function() {
         const newRow = document.createElement('tr');
         newRow.dataset.responseId = response.id;
 
-
         const deleteButton = document.createElement('button');
         deleteButton.className = 'btn btn-danger delete-response';
         deleteButton.textContent = 'Eliminar';
@@ -196,7 +194,6 @@ window.addEventListener('load', function() {
         });
 
         respuestaBody.appendChild(newRow);
-
 
         deleteButton.addEventListener('click', function() {
             const responseId = newRow.dataset.responseId;
