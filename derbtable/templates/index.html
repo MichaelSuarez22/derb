@@ -1,5 +1,25 @@
 {% extends 'gentelella/base.html' %}
 {% load static %}
+
+{% block stylesheets %}
+    <!-- Agrega tus estilos personalizados y otros estilos necesarios -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/drag_and_drop.css' %}">
+    <style>
+        /* Estilos adicionales para el botón del modal dentro del drop-container-1 */
+        #modalButtonContainer {
+            position: absolute;
+            top: 20px;
+            right: 10px;
+        }
+
+        /* Ajusta el ancho del modal según tus necesidades */
+        .modal-xl {
+            max-width: 80%;
+        }
+    </style>
+{% endblock %}
+
 {% block content %}
 <div class="container-fluid">
     <div class="row">
@@ -15,6 +35,22 @@
             <!-- Column for the first drop area -->
             <div class="drop-container bg-light border p-3" id="drop-container-1" ondrop="drop(event, 1)" ondragover="allowDrop(event)">
                 Arrastre aquí el formulario
+                <!-- Botón para abrir el modal -->
+                <div id="modalButtonContainer">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+                        Abrir Modal
+                    </button>
+                </div>
+
+                <!-- Modal -->
+                <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <!-- Contenido del modal se carga dinámicamente aquí -->
+                            <div class="modal-body" id="modalContent"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <!-- Column for the second drop area -->
             <div class="drop-container bg-light border p-3" id="drop-container-2" ondrop="drop(event, 2)" ondragover="allowDrop(event)">
@@ -28,10 +64,8 @@
             <div class="form-group">
                 <button id="guardar" class="btn btn-primary">Guardar</button>
             </div>
-            <!-- Añadir botón para agregar formulario -->
-            <div class="form-group mt-3">
-                <button id="agregarFormulario" class="btn btn-success">Añadir Formulario</button>
-            </div>
+            <!-- Botón para agregar formulario -->
+            <button id="agregarFormulario" class="btn btn-success">Agregar Formulario</button>
         </div>
         <div class="col-md-3 column-right">
             <!-- Column for information and help -->
@@ -50,6 +84,21 @@
     </div>
 </div>
 <script src="{% static 'js/drag_and_drop.js' %}"></script>
-<link rel="stylesheet" type="text/css" href="{% static 'css/drag_and_drop.css' %}">
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> <!-- Asegúrate de incluir Bootstrap y Font Awesome si aún no los tienes -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // Maneja el evento de apertura del modal
+        $('#myModal').on('show.bs.modal', function (e) {
+            // Carga dinámicamente el contenido de responder_preguntas.html en el modal
+            $('#modalContent').load("/responder_preguntas/");
+        });
+
+        // Configura eventos para el botón "Agregar Formulario"
+        var agregarFormularioButton = document.getElementById('agregarFormulario');
+        agregarFormularioButton.addEventListener('click', function () {
+            // ... (código existente para agregar nuevos contenedores y configurar eventos)
+        });
+    });
+</script>
 {% endblock %}
