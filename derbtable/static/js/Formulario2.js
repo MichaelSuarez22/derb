@@ -6,7 +6,7 @@ const eliminarTodoButton2 = document.getElementById('eliminarTodo');
 // Variables para guardar las respuestas específicas de responder_preguntas2
 const storedResponses2 = JSON.parse(localStorage.getItem('responses_responder_preguntas2')) || [];
 
-// Alternar la tabla de respuestas al hacer clic en el icono
+// Alterna la tabla de respuestas al hacer clic en el icono
 iconoApertura2.addEventListener('click', function() {
     if (tablaPreguntasRespuestas2.style.display === 'none') {
         tablaPreguntasRespuestas2.style.display = 'block';
@@ -17,7 +17,7 @@ iconoApertura2.addEventListener('click', function() {
     }
 });
 
-// Función para eliminar una fila de la tabla
+// Borra una fila de la tabla
 function deleteTableRow2(responseId) {
     // Elimina la respuesta
     const updatedResponses2 = storedResponses2.filter(response => response.id != responseId);
@@ -56,7 +56,7 @@ agregarFilaButton2.addEventListener('click', function() {
     storedResponses2.push({ id: newRow.dataset.responseId, values: values });
     localStorage.setItem('responses_responder_preguntas2', JSON.stringify(storedResponses2));
 
-    // Agregar la fila a la tabla
+
     const respuestaBody2 = document.getElementById('respuesta-body');
     respuestaBody2.appendChild(newRow);
 
