@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
     var draggableComponent = document.getElementById('draggable-component');
-    var dropContainers = document.querySelectorAll('.drop-container');
     var preguntaCounter = 1;
     var alturaPregunta = 100;
     var preguntas = [];
@@ -9,12 +8,62 @@ document.addEventListener('DOMContentLoaded', function () {
         e.dataTransfer.setData('text/plain', 'draggable');
     });
 
+    // Botón para agregar formulario
+    var agregarFormularioButton = document.getElementById('agregarFormulario');
+    agregarFormularioButton.addEventListener('click', function () {
+        // Crea un nuevo container
+        var newContainer = document.createElement('div');
+        newContainer.classList.add('drop-container', 'bg-light', 'border', 'p-3');
+        var newContainerId = 'drop-container-' + (preguntaCounter + 3); // Incrementa para evitar colisiones con los primeros tres contenedores
+        newContainer.id = newContainerId;
+
+        // Añade el texto predeterminado al nuevo container
+        var defaultText = document.createElement('p');
+        defaultText.textContent = 'Arrastre aquí el formulario';
+        newContainer.appendChild(defaultText);
+
+        // Añade el nuevo container al DOM después del último contenedor existente
+        var existingContainers = document.querySelectorAll('.drop-container');
+        var lastContainer = existingContainers[existingContainers.length - 1];
+        lastContainer.parentNode.insertBefore(newContainer, lastContainer.nextSibling);
+
+        // Configura eventos de drag and drop para el nuevo container
+        configureDropContainer(newContainer);
+
+        // Realiza la lógica adicional para manejar el formulario dentro del nuevo container si es necesario
+        // ...
+    });
+
+    // Configura eventos de drag and drop para contenedores existentes
+    var dropContainers = document.querySelectorAll('.drop-container');
     dropContainers.forEach(function (dropContainer) {
-        dropContainer.addEventListener('dragover', function (e) {
+        configureDropContainer(dropContainer);
+    });
+
+    // Botón para guardar preguntas
+    var guardarIndexButton = document.getElementById('guardar');
+    guardarIndexButton.addEventListener('click', function () {
+        // Determina qué APIs usar
+        var apiUrl1 = '/api/questions/';
+        var apiUrl2 = '/api/questions2/';
+
+        // Llama a la función para guardar preguntas para cada contenedor
+        guardarPreguntas(apiUrl1, 'drop-container-1');
+        guardarPreguntas(apiUrl2, 'drop-container-2');
+
+        // Llama a la función para guardar preguntas para los nuevos contenedores
+        for (var i = 4; i <= preguntaCounter + 3; i++) {
+            var containerId = 'drop-container-' + i;
+            guardarPreguntas(apiUrl1, containerId);  // Puedes ajustar la API según tus necesidades
+        }
+    });
+
+    function configureDropContainer(container) {
+        container.addEventListener('dragover', function (e) {
             e.preventDefault();
         });
 
-        dropContainer.addEventListener('drop', function (e) {
+        container.addEventListener('drop', function (e) {
             e.preventDefault();
             if (e.dataTransfer.getData('text/plain') === 'draggable') {
                 // Realiza una solicitud AJAX para cargar la vista Component_questions
@@ -22,10 +71,10 @@ document.addEventListener('DOMContentLoaded', function () {
                     url: "/ver_preguntas/",
                     type: 'GET',
                     success: function (data) {
-                        dropContainer.innerHTML = data;
+                        container.innerHTML = data;
 
                         // Obtiene el contenedor del formulario
-                        var formContainer = dropContainer.querySelector('#formulario-container');
+                        var formContainer = container.querySelector('#formulario-container');
                         var form = formContainer.querySelector('form');
 
                         // Eventos del formulario
@@ -47,19 +96,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
             }
         });
-    });
-
-    // BoTon para guardar preguntas
-    var guardarIndexButton = document.getElementById('guardar');
-    guardarIndexButton.addEventListener('click', function () {
-        // Determina que apis usar
-        var apiUrl1 = '/api/questions/';
-        var apiUrl2 = '/api/questions2/';
-
-        // Llama a la función para guardar preguntas para cada contenedor
-        guardarPreguntas(apiUrl1, 'drop-container-1');
-        guardarPreguntas(apiUrl2, 'drop-container-2');
-    });
+    }
 
     function guardarPreguntas(apiUrl, containerId) {
         preguntas = [];
@@ -67,7 +104,7 @@ document.addEventListener('DOMContentLoaded', function () {
         for (var i = 1; i <= preguntaCounter; i++) {
             var preguntaContainer = document.querySelector('#seccion-pregunta-' + i);
 
-            // Agrega preguntas en un contenedor especifico
+            // Agrega preguntas en un contenedor específico
             if (preguntaContainer.closest('.drop-container').id === containerId) {
                 var pregunta = {
                     text: preguntaContainer.querySelector('input[name="text"]').value,
@@ -92,7 +129,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     showConfirmButton: false,
                     timer: 1500
                 });
-
 
                 setTimeout(function () {
                     location.reload();
