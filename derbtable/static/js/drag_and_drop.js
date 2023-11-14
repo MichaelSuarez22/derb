@@ -30,6 +30,13 @@ document.addEventListener('DOMContentLoaded', function () {
         // Configura eventos de drag and drop para el nuevo container
         configureDropContainer(newContainer);
 
+        // Configura eventos para el botón del modal en el nuevo container
+        var modalButton = createModalButton(newContainerId);
+        newContainer.appendChild(modalButton);
+
+        // Configura eventos del nuevo modal
+        configureModal(modalButton, preguntaCounter + 3);
+
         // Realiza la lógica adicional para manejar el formulario dentro del nuevo container si es necesario
         // ...
     });
@@ -38,6 +45,13 @@ document.addEventListener('DOMContentLoaded', function () {
     var dropContainers = document.querySelectorAll('.drop-container');
     dropContainers.forEach(function (dropContainer) {
         configureDropContainer(dropContainer);
+
+        // Configura eventos para el botón del modal en el contenedor existente
+        var modalButton = createModalButton(dropContainer.id);
+        dropContainer.appendChild(modalButton);
+
+        // Configura eventos del modal existente
+        configureModal(modalButton, preguntaCounter + 3);
     });
 
     // Botón para guardar preguntas
@@ -98,6 +112,36 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    function configureModal(modalButton, modalIndex) {
+        modalButton.addEventListener('click', function () {
+            // Configura eventos de apertura del modal
+            $('#myModal' + modalIndex).on('show.bs.modal', function (e) {
+                // Carga dinámicamente el contenido de responder_preguntas.html en el modal
+                $('#modalContent' + modalIndex).load("/responder_preguntas" + modalIndex + "/");
+            });
+
+            // Añade clases de estilo a los modales
+            $('#myModal' + modalIndex + ' .modal-dialog').addClass('modal-container');
+            $('#myModal' + modalIndex + ' .modal-button-container').addClass('modal-button-container');
+        });
+    }
+
+    function createModalButton(containerId) {
+        var modalButtonContainer = document.createElement('div');
+        modalButtonContainer.classList.add('modal-button-container');
+
+        var modalButton = document.createElement('button');
+        modalButton.type = 'button';
+        modalButton.classList.add('btn', 'btn-primary');
+        modalButton.setAttribute('data-toggle', 'modal');
+        modalButton.setAttribute('data-target', '#myModal' + containerId.split('-')[2]); // Obtén el número del contenedor
+        modalButton.textContent = 'Abrir formulario';
+
+        modalButtonContainer.appendChild(modalButton);
+
+        return modalButtonContainer;
+    }
+
     function guardarPreguntas(apiUrl, containerId) {
         preguntas = [];
 
@@ -129,13 +173,15 @@ document.addEventListener('DOMContentLoaded', function () {
                     showConfirmButton: false,
                     timer: 1500
                 });
-
-                setTimeout(function () {
-                    location.reload();
-                }, 1500);
             },
             error: function (error) {
-                console.error('Error al guardar preguntas', error);
+                // SweetAlert para indicar que hubo un error al guardar las preguntas
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error al guardar las preguntas',
+                    text: 'Por favor, inténtelo de nuevo',
+                    showConfirmButton: true,
+                });
             }
         });
     }
