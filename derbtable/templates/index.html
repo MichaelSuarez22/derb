@@ -2,8 +2,8 @@
 {% load static %}
 
 {% block stylesheets %}
+    {{ block.super }}
     <!-- Agrega tus estilos personalizados y otros estilos necesarios -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{% static 'css/drag_and_drop.css' %}">
     <style>
         /* Estilos adicionales para el botón del modal dentro del drop-container-1 */
@@ -28,106 +28,106 @@
 {% endblock %}
 
 {% block content %}
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-3 column-left">
-            <!-- Column for the draggable component -->
-            <div class="drag-container">
-                <div id="draggable-component" class="draggable-item" draggable="true">
-                    Formulario de preguntas
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6 column-center">
-            <!-- Column for the first drop area -->
-            <div class="drop-container bg-light border p-3" id="drop-container-1" ondrop="drop(event, 1)" ondragover="allowDrop(event)">
-                Arrastre aquí el formulario
-                <!-- Botón para abrir el modal en el container 1 -->
-                <div id="modalButtonContainer1">
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal1">
-                        Abrir formulario
-                    </button>
-                </div>
-
-                <!-- Modal en el container 1 -->
-                <div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-xl">
-                        <div class="modal-content">
-                            <!-- Contenido del modal se carga dinámicamente aquí -->
-                            <div class="modal-body" id="modalContent1"></div>
-                        </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3 column-left">
+                <!-- Column for the draggable component -->
+                <div class="drag-container">
+                    <div id="draggable-component" class="draggable-item" draggable="true">
+                        Formulario de preguntas
                     </div>
                 </div>
             </div>
-            <!-- Column for the second drop area -->
-            <div class="drop-container bg-light border p-3" id="drop-container-2" ondrop="drop(event, 2)" ondragover="allowDrop(event)">
-                Arrastre aquí el formulario
-                <!-- Botón para abrir el modal en el container 2 -->
-                <div id="modalButtonContainer2">
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal2">
-                       Abrir formulario
-                    </button>
-                </div>
+            <div class="col-md-6 column-center">
+                <!-- Column for the first drop area -->
+                <div class="drop-container bg-light border p-3" id="drop-container-1" ondrop="drop(event, 1)" ondragover="allowDrop(event)">
+                    Arrastre aquí el formulario
+                    <!-- Botón para abrir el modal en el container 1 -->
+                    <div id="modalButtonContainer1">
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal1">
+                            Abrir formulario
+                        </button>
+                    </div>
 
-                <!-- Modal en el container 2 -->
-                <div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-xl">
-                        <div class="modal-content">
-                            <!-- Contenido del modal se carga dinámicamente aquí -->
-                            <div class="modal-body" id="modalContent2"></div>
+                    <!-- Modal en el container 1 -->
+                    <div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-xl">
+                            <div class="modal-content">
+                                <!-- Contenido del modal se carga dinámicamente aquí -->
+                                <div class="modal-body" id="modalContent1"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
+                <!-- Column for the second drop area -->
+                <div class="drop-container bg-light border p-3" id="drop-container-2" ondrop="drop(event, 2)" ondragover="allowDrop(event)">
+                    Arrastre aquí el formulario
+                    <!-- Botón para abrir el modal en el container 2 -->
+                    <div id="modalButtonContainer2">
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal2">
+                            Abrir formulario
+                        </button>
+                    </div>
+
+                    <!-- Modal en el container 2 -->
+                    <div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-xl">
+                            <div class="modal-content">
+                                <!-- Contenido del modal se carga dinámicamente aquí -->
+                                <div class="modal-body" id="modalContent2"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Column for the third drop area -->
+                <div class="drop-container bg-light border p-3" id="drop-container-3" ondrop="drop(event, 3)" ondragover="allowDrop(event)">
+                    Arrastre aquí el formulario
+                </div>
+                <!-- Botón de guardar -->
+                <div class="form-group">
+                    <button id="guardar" class="btn btn-primary">Guardar</button>
+                </div>
+                <!-- Botón para agregar formulario -->
+                <button id="agregarFormulario" class="btn btn-success">Agregar Formulario</button>
             </div>
-            <!-- Column for the third drop area -->
-            <div class="drop-container bg-light border p-3" id="drop-container-3" ondrop="drop(event, 3)" ondragover="allowDrop(event)">
-                Arrastre aquí el formulario
-            </div>
-            <!-- Botón de guardar -->
-            <div class="form-group">
-                <button id="guardar" class="btn btn-primary">Guardar</button>
-            </div>
-            <!-- Botón para agregar formulario -->
-            <button id="agregarFormulario" class="btn btn-success">Agregar Formulario</button>
-        </div>
-        <div class="col-md-3 column-right">
-            <!-- Column for information and help -->
-            <div class="info-container">
-                <h3>Help</h3>
-                <button class="btn btn-link help-icon" data-toggle="collapse" data-target="#help-content">
-                    <i class="fa fa-question-circle"></i> <!-- Icono de ayuda -->
-                </button>
-                <div id="help-content" class="collapse">
-                    <p>1. Toma el componente del formulario y arrástralo al espacio indicado para crear una nueva tabla de preguntas.</p>
-                    <p>2. Al llenar las preguntas, puedes presionar "AGREGAR OTRA PREGUNTA" si deseas añadir diversas preguntas en una tabla.</p>
-                    <p>3. Si desea confirmar el registro de las preguntas en la tabla, presione el botón "Guardar".</p>
+            <div class="col-md-3 column-right">
+                <!-- Column for information and help -->
+                <div class="info-container">
+                    <h3>Help</h3>
+                    <button class="btn btn-link help-icon" data-toggle="collapse" data-target="#help-content">
+                        <i class="fa fa-question-circle"></i> <!-- Icono de ayuda -->
+                    </button>
+                    <div id="help-content" class="collapse">
+                        <p>1. Toma el componente del formulario y arrástralo al espacio indicado para crear una nueva tabla de preguntas.</p>
+                        <p>2. Al llenar las preguntas, puedes presionar "AGREGAR OTRA PREGUNTA" si deseas añadir diversas preguntas en una tabla.</p>
+                        <p>3. Si desea confirmar el registro de las preguntas en la tabla, presione el botón "Guardar".</p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<script src="{% static 'js/drag_and_drop.js' %}"></script>
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.min.js"></script>
-<script>
-    $(document).ready(function () {
-        // Maneja el evento de apertura del modal en el container 1
-        $('#myModal1').on('show.bs.modal', function (e) {
-            // Carga dinámicamente el contenido de responder_preguntas.html en el modal
-            $('#modalContent1').load("/responder_preguntas/");
-        });
+    <script src="{% static 'js/drag_and_drop.js' %}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Maneja el evento de apertura del modal en el container 1
+            $('#myModal1').on('show.bs.modal', function (e) {
+                // Carga dinámicamente el contenido de responder_preguntas.html en el modal
+                $('#modalContent1').load("/responder_preguntas/");
+            });
 
-        // Maneja el evento de apertura del modal en el container 2
-        $('#myModal2').on('show.bs.modal', function (e) {
-            // Carga dinámicamente el contenido de responder_preguntas2.html en el modal
-            $('#modalContent2').load("/responder_preguntas2/");
-        });
+            // Maneja el evento de apertura del modal en el container 2
+            $('#myModal2').on('show.bs.modal', function (e) {
+                // Carga dinámicamente el contenido de responder_preguntas2.html en el modal
+                $('#modalContent2').load("/responder_preguntas2/");
+            });
 
-        // Configura eventos para el botón "Agregar Formulario"
-        var agregarFormularioButton = document.getElementById('agregarFormulario');
-        agregarFormularioButton.addEventListener('click', function () {
-            // ... (código existente para agregar nuevos contenedores y configurar eventos)
+            // Configura eventos para el botón "Agregar Formulario"
+            var agregarFormularioButton = document.getElementById('agregarFormulario');
+            agregarFormularioButton.addEventListener('click', function () {
+                // ... (código existente para agregar nuevos contenedores y configurar eventos)
+            });
         });
-    });
-</script>
+    </script>
 {% endblock %}
