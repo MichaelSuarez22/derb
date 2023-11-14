@@ -19,4 +19,5 @@ path('derb/', views.derb_view, name='derb_view'),
 path('eliminar_respuesta/<int:respuesta_id>/', views.eliminar_respuesta, name='eliminar_respuesta'),
 path('ver_preguntas/', views.ver_preguntas, name='ver_preguntas'),
 path('responder_preguntas2/', views.responder_preguntas2, name='responder_preguntas2'),
+
 ]

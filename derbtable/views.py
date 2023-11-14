@@ -1,6 +1,6 @@
 from django.core.serializers import json
 from django.http import JsonResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from rest_framework import viewsets
 from rest_framework import status
 from rest_framework.response import Response
@@ -139,3 +139,7 @@ def responder_preguntas2(request):
     }
 
     return render(request, 'responder_preguntas2.html', context)
+
+
+
+

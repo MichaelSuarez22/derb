@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var draggableComponent = document.getElementById('draggable-component');
     var preguntaCounter = 1;
     var alturaPregunta = 100;
+    var containerHeight = 300; // Ajusta según sea necesario
     var preguntas = [];
 
     draggableComponent.addEventListener('dragstart', function (e) {
@@ -105,6 +106,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
                             form.appendChild(preguntaContainer);
                             formContainer.style.maxHeight = (containerHeight + preguntaCounter * alturaPregunta) + 'px';
+                        });
+
+                        // Evento para el botón "Eliminar"
+                        var eliminarPreguntaButton = formContainer.querySelector('#eliminar');
+                        eliminarPreguntaButton.addEventListener('click', function () {
+                            var preguntaContainers = formContainer.querySelectorAll('.seccion-pregunta');
+                            if (preguntaContainers.length > 1) {
+                                var lastPreguntaContainer = preguntaContainers[preguntaContainers.length - 1];
+                                lastPreguntaContainer.remove();
+                                preguntaCounter--;
+                                formContainer.style.maxHeight = (containerHeight + preguntaCounter * alturaPregunta) + 'px';
+                            }
                         });
                     }
                 });
