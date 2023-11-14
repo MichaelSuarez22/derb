@@ -1,10 +1,12 @@
+from multiprocessing.connection import Client
+
 from django.test import TestCase
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
 
 from . import forms
-from .forms import ResponseForm
+from .forms import ResponseTextForm, ResponseNumberForm
 from .models import Question, Response, Formulario, QuestionOption
 
 
@@ -54,28 +56,93 @@ class ResponseAPITest(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
 
-#Pruebas para el responseForm(forms.py)
 
 
-class ResponseFormTest(TestCase):
+
+
+#Probando el forms.py
+
+
+class ResponseNumberFormTest(TestCase):
+    def test_valid_form(self):
+        # Crea una pregunta
+        question = Question.objects.create(text='¿Cuántos años tienes?', question_type='number')
+
+        # Datos válidos para el formulario de número
+        data = {'question': question.id, 'text_response': '25'}
+        form = ResponseNumberForm(data=data)
+
+        # Verifica que el formulario sea válido
+        self.assertTrue(form.is_valid())
+
+    def test_invalid_form(self):
+        # Crea una pregunta
+        question = Question.objects.create(text='¿Cuántos años tienes?', question_type='number')
+
+
+        data = {'question': question.id, 'text_response': 'no es un número'}
+        form = ResponseNumberForm(data=data)
+
+        # Verifica que el formulario no sea válido
+        self.assertFalse(form.is_valid())
+
+class ResponseTextFormTest(TestCase):
+    def test_valid_form(self):
+        # Crea una pregunta
+        question = Question.objects.create(text='¿Cuál es tu nombre?', question_type='text')
+
+        # Datos válidos para el formulario de texto
+        data = {'question': question.id, 'text_response': 'Juan'}
+        form = ResponseTextForm(data=data)
+
+        # Verifica que el formulario sea válido
+        self.assertTrue(form.is_valid())
+
+    def test_invalid_form(self):
+        # Crea una pregunta
+        question = Question.objects.create(text='¿Cuál es tu nombre?', question_type='text')
+
+        # Datos inválidos para el formulario de texto (campo vacío)
+        data = {'question': question.id, 'text_response': ''}
+        form = ResponseTextForm(data=data)
+
+        # Verifica que el formulario no sea válido
+        self.assertFalse(form.is_valid())
+
+
+
+#probando la vista del formulario responder_preguntas
+
+class ResponderPreguntasViewTest(TestCase):
     def setUp(self):
-        self.multiple_choice_question = Question.objects.create(text="Multiple Choice Question", question_type="multiple_choice")
-        self.text_question = Question.objects.create(text="Text Question", question_type="text")
+        # Configuración común para las pruebas
+        self.client = Client()
 
-        self.option1 = QuestionOption.objects.create(question=self.multiple_choice_question, text="Option 1")
-        self.option2 = QuestionOption.objects.create(question=self.multiple_choice_question, text="Option 2")
+    def test_responder_preguntas_view(self):
+        # Crea preguntas de prueba
+        pregunta_number = Question.objects.create(question_type='number')
+        pregunta_text = Question.objects.create(question_type='text')
 
-    def test_form_fields_for_multiple_choice_question(self):
-        form = ResponseForm(self.multiple_choice_question)  # Pasa la pregunta directamente
+        # Realiza una solicitud POST a la vista con datos de formulario simulados
+        response = self.client.post(reverse('responder_preguntas'), {
+            f'form-{pregunta_number.id}-text_response': '42',  # Simula una respuesta de número
+            f'form-{pregunta_text.id}-text_response': 'Respuesta de texto',  # Simula una respuesta de texto
+        })
 
-        self.assertTrue('text_response' in form.fields)
-        self.assertIsInstance(form.fields['text_response'], forms.ModelMultipleChoiceField)
-        self.assertEqual(form.fields['text_response'].queryset.count(), 2)
+        # Verifica que la respuesta sea una redirección (HTTP 302)
+        self.assertEqual(response.status_code, 302)
 
-    def test_form_fields_for_text_question(self):
-        form = ResponseForm()
-        form.set_question(self.text_question)
+        # Verifica que las respuestas se hayan guardado correctamente en la base de datos
+        self.assertEqual(Response.objects.filter(text_response='42').count(), 1)
+        self.assertEqual(Response.objects.filter(text_response='Respuesta de texto').count(), 1)
 
-        self.assertTrue('text_response' in form.fields)
-        self.assertIsInstance(form.fields['text_response'], forms.CharField)
-        self.assertEqual(form.fields['text_response'].max_length, 200)
+        # También puedes realizar otras verificaciones según la lógica específica de tu vista
+
+    def test_responder_preguntas_view_get(self):
+        # Realiza una solicitud GET a la vista
+        response = self.client.get(reverse('responder_preguntas'))
+
+        # Verifica que la respuesta sea un éxito (HTTP 200)
+        self.assertEqual(response.status_code, 200)
+
+
